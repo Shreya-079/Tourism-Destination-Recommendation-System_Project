@@ -1,0 +1,103 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <a href="{{ url_for('logout') }}" class="logout-btn">Logout</a>
+
+    <meta charset="UTF-8">
+    <title>{{ destination.name }} - Details</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+    <style>
+        .details-container {
+            max-width: 900px;
+            margin: 40px auto;
+            background: #ffffffcc;
+            padding: 30px;
+            border-radius: 12px;
+            box-shadow: 0 0 15px rgba(0, 0, 0, 0.2);
+        }
+
+        .details-container img {
+            width: 100%;
+            height: auto;
+            border-radius: 10px;
+        }
+
+        h2 {
+            margin-top: 20px;
+        }
+
+        .back-link {
+            margin-top: 20px;
+            display: inline-block;
+            text-decoration: none;
+            color: #007bff;
+        }
+
+        .back-link:hover {
+            text-decoration: underline;
+        }
+    </style>
+</head>
+<body>
+    <div class="details-container">
+        <img src="{{ destination.image }}" alt="{{ destination.name }}" style="max-width:100%; height:auto; border-radius: 10px;">
+        <h1>{{ destination.name }}</h1>
+        <p>{{ destination.description }}</p>
+
+        {% if destination.best_time_to_visit %}
+        <h3>🗓️ Best Time to Visit</h3>
+        <p>{{ destination.best_time_to_visit }}</p>
+    {% endif %}
+    
+    {% if destination.fun_facts %}
+        <h2>🤔 Fun Facts</h2>
+        <ul>
+            {% for fact in destination.fun_facts %}
+                <li>{{ fact }}</li>
+            {% endfor %}
+        </ul>
+    {% endif %}
+    
+    {% if destination.places_to_visit %}
+        <h2>📍 Places to Visit</h2>
+        <ul>
+            {% for place in destination.places_to_visit %}
+                <li>{{ place }}</li>
+            {% endfor %}
+        </ul>
+    {% endif %}
+{% if destination.name %}
+    <h2>Map</h2>
+    <iframe 
+        width="100%" 
+        height="300" 
+        frameborder="0" 
+        style="border:0" 
+        referrerpolicy="no-referrer-when-downgrade"
+        src="https://www.google.com/maps?q={{ destination.name | urlencode }}&output=embed" 
+        allowfullscreen>
+    </iframe>
+{% endif %}
+        {% if avg_rating %}
+            <h3>Average Rating: ⭐ {{ avg_rating }} / 5</h3>
+        {% else %}
+            <h3>No ratings yet</h3>
+        {% endif %}
+
+        <h4>Reviews:</h4>
+        {% if reviews %}
+            <ul>
+            {% for review in reviews %}
+                <li>
+                <strong>{{ review.username }}:</strong> {{ review.text }} (Rating: {{ review.rating }}/5)
+                </li>
+            {% endfor %}
+            </ul>
+        {% else %}
+            <p>No reviews available yet.</p>
+        {% endif %}
+        </div>
+    <a href="{{ url_for('recommendations') }}" class="back-link">← Back to Recommendations</a>
+    </div>
+</body>
+</html>

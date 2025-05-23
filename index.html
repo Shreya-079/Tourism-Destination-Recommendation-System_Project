@@ -1,0 +1,97 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Tourism Recommender</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+    <link href="https://fonts.googleapis.com/css2?family=Pacifico&family=Roboto&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+</head>
+<body>
+    <button id="theme-toggle" class="theme-toggle">🌙 Toggle Mode</button>
+
+    <div class="hero">
+        <h1><i class="fas fa-map-marker-alt"></i> Explore Incredible Places!</h1>
+        <p>Find your next dream destination based on what you love.</p>
+    </div>
+
+    <div class="container">
+        <form method="POST" action="/">
+           
+            <label>Preferences (select all that apply):</label>
+            <div class="checkbox-grid">
+                {% for preference in [
+                    'Beach', 'Mountain', 'City', 'History', 'Nature', 'Relaxation',
+                    'Culture', 'Wildlife', 'Adventure', 'Spirituality', 'Architecture',
+                    'Shopping', 'River', 'Romance', 'Lakes', 'Desert', 'Food',
+                    'Scenic', 'Art', 'Snow', 'Entertainment', 'Education',
+                    'Waterfalls', 'Forest', 'Music'
+                ] %}
+                <div class="checkbox-item">
+                    <input type="checkbox" id="{{ preference }}" name="preferences" value="{{ preference }}">
+                    <label for="{{ preference }}">{{ preference }}</label>
+                </div>
+                {% endfor %}
+            </div>
+
+            <label for="last_destination">Last Destination Visited:</label>
+            <input type="text" id="last_destination" name="last_destination">
+            <label for="rating">Rating (1-5):</label>
+            <input type="number" name="rating" id="rating" min="1" max="5" required />
+            
+            <label for="review">Review of Last Destination:</label>
+            <textarea id="review" name="review" rows="4" cols="50"></textarea>
+
+            <button id="submitBtn" type="submit">
+                ✈️ <span>Get Recommendations</span>
+            </button>
+            
+        </form>
+    </div>
+    <div class="clouds">
+        <img src="{{ url_for('static', filename='cloud.png') }}" class="cloud cloud1">
+        <img src="{{ url_for('static', filename='cloud.png') }}" class="cloud cloud2">
+        <img src="{{ url_for('static', filename='cloud.png') }}" class="cloud cloud3">
+        <img src="{{ url_for('static', filename='cloud.png') }}" class="cloud cloud4">
+        <img src="{{ url_for('static', filename='cloud.png') }}" class="cloud cloud5">
+    </div>
+    <script>
+        const form = document.querySelector('form');
+        const submitBtn = document.getElementById('submitBtn');
+    
+        form.addEventListener('submit', function (e) {
+            e.preventDefault(); // stop immediate submission
+            submitBtn.classList.add('flying'); // start flying animation
+            setTimeout(() => {
+                form.submit(); // submit form after animation finishes
+            }, 900); // delay matches animation duration
+        });
+    </script>
+    
+    <script>
+        const toggleBtn = document.getElementById("theme-toggle");
+        toggleBtn.addEventListener("click", () => {
+          document.body.classList.toggle("dark-mode");
+      
+          // Optional: Save preference in local storage
+          if (document.body.classList.contains("dark-mode")) {
+            localStorage.setItem("theme", "dark");
+          } else {
+            localStorage.setItem("theme", "light");
+          }
+        });
+      
+        // Load theme preference
+        window.onload = () => {
+          if (localStorage.getItem("theme") === "dark") {
+            document.body.classList.add("dark-mode");
+          }
+        };
+      </script>
+      <form action="{{ url_for('logout') }}" method="get">
+        <button type="submit">Logout</button>
+    </form>
+    
+</body>
+</html>
