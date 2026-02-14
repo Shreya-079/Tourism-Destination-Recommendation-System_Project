@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <a href="{{ url_for('logout') }}" class="logout-btn">Logout</a>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Recommended Destinations</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+</head>
+<body>
+
+<!-- Airplane Loading Animation -->
+<div id="loading-animation">
+    <div class="sky">
+        <div class="plane"></div>
+    </div>
+</div>
+
+<div class="container">
+    <h1>Recommended Destinations</h1>
+
+    {% if preferences %}
+        <p>Showing destinations for: <strong>{{ preferences.replace(',', ', ') }}</strong></p>
+    {% else %}
+        <p>No preferences selected. Showing all destinations.</p>
+    {% endif %}
+
+    {% if destinations %}
+        <div class="destination-grid">
+            {% for dest in destinations %}
+                <a href="{{ url_for('destination_detail', destination_name=dest.name) }}" class="destination-link">
+                    <div class="destination-box" style="background-image: url('{{ url_for('static', filename='images/' + dest.image_file) | default(url_for('static', filename='images/fallback.jpeg')) }}');">
+                        <h2>{{ dest.name }}</h2>
+                        <p>{{ dest.description }}</p>
+                        <div class="extra-info">
+                            <span>Location: {{ dest.location }}</span> |
+                            <span>Attributes: {{ dest.attributes | join(', ') }}</span>
+                        </div>
+                    </div>
+                </a>
+            {% endfor %}
+        </div>
+    {% else %}
+        <p>No destinations found for your preferences.</p>
+    {% endif %}
+
+    <a href="/">Back to Home</a>
+</div>
+
+<script>
+    // Show loader until everything is loaded
+    window.addEventListener("load", function () {
+        const loader = document.getElementById("loading-animation");
+        loader.style.opacity = 0;
+        setTimeout(() => loader.style.display = "none", 500); // Smooth fade-out
+    });
+</script>
+
+</body>
+</html>
